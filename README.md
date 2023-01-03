@@ -5,7 +5,8 @@
 [![License badge](https://img.shields.io/badge/license-GPLv3-yellowgreen)](https://choosealicense.com/licenses/gpl-3.0/)
 
 This repository contains Jupyter notebooks that can be used to train custom
-[YOLOv5](https://github.com/ultralytics/yolov5) detection and classification
+[YOLOv5](https://github.com/ultralytics/yolov5) detection and
+[classification](https://github.com/ultralytics/yolov5/pull/8956)
 models with your own data (annotated images). You will also find Python
 scripts for classification (`predict_mod.py`) of insect images
 ([cropped detections](https://maxsitt.github.io/insect-detect-docs/deployment/detection/#processing-pipeline))
