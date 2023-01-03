@@ -6,9 +6,12 @@
 
 This repository contains Jupyter notebooks that can be used to train custom
 [YOLOv5](https://github.com/ultralytics/yolov5) detection and classification
-models with your own data (annotated images). You will also find Python scripts
-for classification (`predict_mod.py`) of insect images and analysis (`csv_analysis.py`) 
-of the metadata.csv output from the Insect Detect DIY camera trap.
+models with your own data (annotated images). You will also find Python
+scripts for classification (`predict_mod.py`) of insect images
+([cropped detections](https://maxsitt.github.io/insect-detect-docs/deployment/detection/#processing-pipeline))
+and analysis (`csv_analysis.py`) of the
+[metadata .csv](https://maxsitt.github.io/insect-detect-docs/deployment/detection/#metadata-csv)
+files, which are generated as output from the Insect Detect DIY camera trap.
 
 ## Model training
 
@@ -31,15 +34,29 @@ that enable you to change the important parameters without having to write any c
 
 ## Classification
 
-More information about deployment of the classification script `predict_mod.py` can be found in the
-[**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/classification/) 📑.
+The classification script `predict_mod.py` is a modified version of the `predict.py` script
+from the [YOLOv5 repo](https://github.com/ultralytics/yolov5/tree/master/classify),
+with the following added options:
 
-The classification script is a slightly modified version of the `predict.py` script from the YOLOv5 repo.
+- `--concat-csv` to concatenate metadata .csv files and append classification results to new columns
+- `--new-csv` to create a new .csv file with classification results, e.g. if no metadata .csv files are available
+- `--sort-top1` to sort classified images to folders with predicted top1 class as folder name and do not write results on to image as text (which is the default configuration)
+
+More information about deployment of the classification script can be found in the
+[**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/classification/) 📑.
 
 ## Analysis
 
-More information about deployment of the analysis script `csv_analysis.py` can be found in the
-[**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/classification/) 📑.
+The analysis script `csv_analysis.py` can be used to automatically analyze the
+concatenated metadata .csv file after the classification step, as it will still
+contain multiple rows for each tracked insect. Running the script will yield a
+.csv file in which each row corresponds to an individual tracked insect and its
+classification result with the overall highest probability. Additionally, several
+[plots](https://maxsitt.github.io/insect-detect-docs/deployment/analysis/#overview-plots)
+are generated that can give a first overview of the analyzed data.
+
+More information about deployment of the analysis script can be found in the
+[**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/analysis/) 📑.
 
 ## License
 
