@@ -71,5 +71,5 @@ You can cite this repository as:
 
 ```
 Sittinger, M. (2023). Insect Detect ML - Software for classification and analysis
-of the output from a DIY camera trap system. Zenodo. https://doi.org/10.5281/zenodo.7502196
+of the output from a DIY camera trap system. Zenodo. https://doi.org/10.5281/zenodo.7502195
 ```
