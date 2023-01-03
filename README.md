@@ -2,6 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/logo.png" width="500">
 
+[![DOI](https://zenodo.org/badge/580963598.svg)](https://zenodo.org/badge/latestdoi/580963598)
 [![License badge](https://img.shields.io/badge/license-GPLv3-yellowgreen)](https://choosealicense.com/licenses/gpl-3.0/)
 
 This repository contains Jupyter notebooks that can be used to train custom
@@ -63,3 +64,12 @@ More information about deployment of the analysis script can be found in the
 
 All Python scripts are licensed under the GNU General Public License v3.0
 ([GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)).
+
+## Citation
+
+You can cite this repository as:
+
+```
+Sittinger, M. (2023). Insect Detect ML - Software for classification and analysis
+of the output from a DIY camera trap system. Zenodo. https://doi.org/10.5281/zenodo.7502196
+```
