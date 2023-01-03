@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+type: software
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Sittinger
+    given-names: Maximilian
+    orcid: "https://orcid.org/0000-0002-4096-8556"
+title: >-
+  "Insect Detect ML - Software for classification and
+  analysis of the output from a DIY camera trap system."
+version: 1.0
+doi: 10.5281/zenodo.7502196
+date-released: 2023-01-03
+license: GPL-3.0
+url: "https://maxsitt.github.io/insect-detect-docs/"
