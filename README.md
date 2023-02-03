@@ -106,6 +106,6 @@ All Python scripts are licensed under the GNU General Public License v3.0
 You can cite this repository as:
 
 ```
-Sittinger, M. (2023). Insect Detect ML - Software for classification and analysis of images
-and metadata from a DIY camera trap system. Zenodo. https://doi.org/10.5281/zenodo.7502195
+Sittinger, M. (2023). Insect Detect ML - Software for classification of images and analysis
+of metadata from a DIY camera trap system (v1.1). Zenodo. https://doi.org/10.5281/zenodo.7603476
 ```
