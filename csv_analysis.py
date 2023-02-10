@@ -10,7 +10,7 @@ This Python script does the following:
 - calculate relative (or absolute, if frame width/height in mm is given) bounding box sizes
   and bbox length (= longer side) + bbox width (= shorter side)
 - save metadata sorted by recording ID, tracking ID and timestamp successively (ascending)
-  as "metadata_classified*_sorted.csv"
+  to "metadata_classified*_sorted.csv"
 
 - group by tracking ID per recording ID and calculate per tracking ID (per recording ID):
   - number of images per top1 class
@@ -20,7 +20,7 @@ This Python script does the following:
     (number images_top1 class / total number images_tracking ID) * mean classification probability
   - mean bbox length and bbox width for each top1 class
 - save metadata sorted by recording ID, tracking ID and weighted probability successively
-  (ascending) as "metadata_classified*_top1_all.csv"
+  (ascending) to "metadata_classified*_top1_all.csv"
 
 - group by tracking ID per recording ID and calculate/extract per tracking ID (per recording ID):
   - mean detection confidence
@@ -33,7 +33,16 @@ This Python script does the following:
   - mean bounding box length and width of the top1 class with the highest weighted probability
 - remove tracking IDs with less or more than the specified number of images
 - save metadata calculated for each tracking ID (per recording ID) (one row per tracking ID)
-  as "metadata_classified*_top1.csv"
+  to "metadata_classified*_top1.csv"
+
+- extract some info about the analysis and save to "metadata_classified*_analysis_info.csv"
+  - total number of unique tracking IDs per recording ID
+  - minimum number of images per tracking ID to keep it in final .csv (*_top1.csv)
+  - maximum number of images per tracking ID to keep it in final .csv (*_top1.csv)
+  - number of unique trackings IDs per recording ID left after removing all
+    tracking IDs with less or more than the specified number of images
+  - number of unique top1 classes per recording ID after removing all
+    tracking IDs with less or more than the specified number of images
 
 - create and save some basic plots for a quick first data overview
 
@@ -50,6 +59,7 @@ This Python script does the following:
 
 import argparse
 import time
+from datetime import datetime
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -79,7 +89,9 @@ csv_file = Path(list(Path(".").glob("metadata_classified*.csv"))[0])
 csv_name = csv_file.stem
 
 # Create folder to save analyzed metadata .csv files
-Path(f"{csv_name}_tables").mkdir(parents=True, exist_ok=True)
+timestamp = datetime.now().strftime("%Y%m%d_%H-%M-%S")
+save_path = f"metadata_analyzed_{timestamp}"
+Path(f"{save_path}/{csv_name}_tables").mkdir(parents=True, exist_ok=True)
 
 # Read metadata .csv into pandas DataFrame and convert timestamp to pandas datetime object
 df = pd.read_csv(csv_file, encoding="utf-8")
@@ -98,8 +110,7 @@ df["bbox_width"] = np.where(df["bbox_size_x"] < df["bbox_size_y"], df["bbox_size
 df = df.sort_values(["rec_ID", "track_ID", "timestamp"])
 
 # Write DataFrame to csv file
-df.to_csv(f"{csv_name}_tables/{csv_name}_sorted.csv", index=False)
-
+df.to_csv(f"{save_path}/{csv_name}_tables/{csv_name}_sorted.csv", index=False)
 
 # Create DataFrame with recording ID, tracking ID and top1 classes + number of corresponding images per tracking ID
 df_top1_all = (df.groupby(["rec_ID", "track_ID"])["top1"]
@@ -135,8 +146,7 @@ df_top1_all["bbox_width_mean"] = (df.groupby(["rec_ID", "track_ID", "top1"])["bb
 df_top1_all = df_top1_all.sort_values(["rec_ID", "track_ID", "prob_weighted"])
 
 # Write DataFrame to csv file
-df_top1_all.to_csv(f"{csv_name}_tables/{csv_name}_top1_all.csv", index=False)
-
+df_top1_all.to_csv(f"{save_path}/{csv_name}_tables/{csv_name}_top1_all.csv", index=False)
 
 # Create DataFrame with recording ID and tracking ID + number of corresponding images
 df_top1 = (df.groupby(["rec_ID", "track_ID"])["track_ID"]
@@ -197,16 +207,40 @@ removed_min_tracks = len(df_top1[df_top1["track_ID_imgs"] < args.remove_min_trac
 removed_max_tracks = len(df_top1[df_top1["track_ID_imgs"] > args.remove_max_tracks])
 print(f"\nRemoved {removed_min_tracks} tracking IDs with less than {args.remove_min_tracks} images.")
 print(f"Removed {removed_max_tracks} tracking IDs with more than {args.remove_max_tracks} images.\n")
-
 df_top1 = df_top1[(df_top1["track_ID_imgs"] >= args.remove_min_tracks) &
                   (df_top1["track_ID_imgs"] <= args.remove_max_tracks)]
 
 # Write DataFrame to csv file
-df_top1.to_csv(f"{csv_name}_tables/{csv_name}_top1.csv", index=False)
+df_top1.to_csv(f"{save_path}/{csv_name}_tables/{csv_name}_top1.csv", index=False)
 
+# Create DataFrame with info about the analysis
+df_info = (df.groupby("rec_ID")
+             .agg({"track_ID": "nunique"}))
+df_info.rename(columns={"track_ID": "track_IDs_total"}, inplace=True)
+df_info["min_track_imgs"] = args.remove_min_tracks
+df_info["max_track_imgs"] = args.remove_max_tracks
+tracks_left = (df_top1.groupby("rec_ID")
+                      .size()
+                      .reset_index(drop=True))
+if len(tracks_left) == 1:
+    tracks_left.index += 2
+else:
+    tracks_left.index += 1
+df_info["track_IDs_left"] = tracks_left
+top1_classes = (df_top1.groupby("rec_ID")["top1_class"]
+                       .nunique()
+                       .reset_index(drop=True))
+if len(top1_classes) == 1:
+    top1_classes.index += 2
+else:
+    top1_classes.index += 1
+df_info["top1_classes"] = top1_classes
+
+# Write DataFrame to csv file
+df_info.to_csv(f"{save_path}/{csv_name}_analysis_info.csv")
 
 # Create folder to save plots
-Path(f"{csv_name}_plots").mkdir(parents=True, exist_ok=True)
+Path(f"{save_path}/{csv_name}_plots").mkdir(parents=True, exist_ok=True)
 
 # Plot histogram with the distribution of the number of images per tracking ID
 (df_top1["track_ID_imgs"].plot(kind="hist",
@@ -214,7 +248,7 @@ Path(f"{csv_name}_plots").mkdir(parents=True, exist_ok=True)
                                edgecolor="black",
                                title="Distribution of the number of images per tracking ID")
                          .set(xlabel="Number of images per tracking ID"))
-plt.savefig(f"{csv_name}_plots/imgs_per_track.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/imgs_per_track.png", bbox_inches="tight")
 plt.clf()
 
 # Plot histogram with the distribution of the duration [s] per tracking ID
@@ -223,7 +257,7 @@ plt.clf()
                             edgecolor="black",
                             title="Distribution of the duration [s] per tracking ID")
                       .set(xlabel="Duration [s] per tracking ID"))
-plt.savefig(f"{csv_name}_plots/duration_per_track.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/duration_per_track.png", bbox_inches="tight")
 plt.clf()
 
 # Plot barplot with the number of individual tracking IDs per recording
@@ -233,7 +267,7 @@ plt.clf()
               edgecolor="black",
               ylabel="Number of individual tracking IDs",
               title="Number of individual tracking IDs per recording"))
-plt.savefig(f"{csv_name}_plots/tracks_per_rec.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/tracks_per_rec.png", bbox_inches="tight")
 plt.clf()
 
 # Plot stacked barplot with the top 1 classes per recording
@@ -245,7 +279,7 @@ plt.clf()
               edgecolor="black",
               ylabel="Number of individual tracking IDs",
               title="Top 1 classes per recording"))
-plt.savefig(f"{csv_name}_plots/top1_classes_per_rec.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/top1_classes_per_rec.png", bbox_inches="tight")
 plt.clf()
 
 # Plot barplot with the mean detection confidence per top 1 class
@@ -256,7 +290,7 @@ plt.clf()
               edgecolor="black",
               ylabel="Mean detection confidence",
               title="Mean detection confidence per top 1 class"))
-plt.savefig(f"{csv_name}_plots/top1_classes_mean_det_conf.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/top1_classes_mean_det_conf.png", bbox_inches="tight")
 plt.clf()
 
 # Plot barplot with the mean classification probability per top 1 class
@@ -267,7 +301,7 @@ plt.clf()
               edgecolor="black",
               ylabel="Mean classification probability",
               title="Mean classification probability per top 1 class"))
-plt.savefig(f"{csv_name}_plots/top1_classes_mean_prob.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/top1_classes_mean_prob.png", bbox_inches="tight")
 plt.clf()
 
 # Plot barplot with the mean tracking duration [s] per top 1 class
@@ -278,7 +312,7 @@ plt.clf()
               edgecolor="black",
               ylabel="Mean tracking duration [s]",
               title="Mean tracking duration [s] per top 1 class"))
-plt.savefig(f"{csv_name}_plots/top1_classes_mean_duration.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/top1_classes_mean_duration.png", bbox_inches="tight")
 plt.clf()
 
 # Plot barplot with the mean number of images per tracking ID classified as top 1 class
@@ -289,7 +323,7 @@ plt.clf()
               edgecolor="black",
               ylabel="Mean number of images per tracking ID",
               title="Mean number of images per tracking ID classified as top 1 class"))
-plt.savefig(f"{csv_name}_plots/top1_classes_mean_imgs.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/top1_classes_mean_imgs.png", bbox_inches="tight")
 plt.clf()
 
 # Plot boxplot with mean bbox lengths per top 1 class
@@ -301,7 +335,7 @@ if args.frame_width != 1 or args.frame_height != 1:
               by="top1_class",
               ylabel=Y_LABEL_L,
               title="Mean bounding box length (longer side) per top 1 class"))
-plt.savefig(f"{csv_name}_plots/top1_classes_bbox_length.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/top1_classes_bbox_length.png", bbox_inches="tight")
 plt.clf()
 
 # Plot boxplot with mean bbox widths per top 1 class
@@ -313,12 +347,12 @@ if args.frame_width != 1 or args.frame_height != 1:
               by="top1_class",
               ylabel=Y_LABEL_W,
               title="Mean bounding box width (shorter side) per top 1 class"))
-plt.savefig(f"{csv_name}_plots/top1_classes_bbox_width.png", bbox_inches="tight")
+plt.savefig(f"{save_path}/{csv_name}_plots/top1_classes_bbox_width.png", bbox_inches="tight")
 plt.clf()
 
 # Print info messages to console
-path_tables = Path.cwd() / f"{csv_name}_tables"
-path_plots = Path.cwd() / f"{csv_name}_plots"
+path_tables = Path.cwd() / f"{save_path}/{csv_name}_tables"
+path_plots = Path.cwd() / f"{save_path}/{csv_name}_plots"
 print(f"Generated .csv files saved to: {path_tables}")
 print(f"Generated plots saved to:      {path_plots}\n")
 print(f"Script run time: {round(time.monotonic() - start_time, 3)} s")
