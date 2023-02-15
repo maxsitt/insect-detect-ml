@@ -214,27 +214,15 @@ df_top1 = df_top1[(df_top1["track_ID_imgs"] >= args.remove_min_tracks) &
 df_top1.to_csv(f"{save_path}/{csv_name}_tables/{csv_name}_top1.csv", index=False)
 
 # Create DataFrame with info about the analysis
-df_info = (df.groupby("rec_ID")
-             .agg({"track_ID": "nunique"}))
-df_info.rename(columns={"track_ID": "track_IDs_total"}, inplace=True)
+df_info = (df.groupby("rec_ID", as_index=True)
+             .agg(track_IDs_total=("track_ID", "nunique"),
+                  top1_classes_total=("top1", "nunique")))
 df_info["min_track_imgs"] = args.remove_min_tracks
 df_info["max_track_imgs"] = args.remove_max_tracks
-tracks_left = (df_top1.groupby("rec_ID")
-                      .size()
-                      .reset_index(drop=True))
-if len(tracks_left) == 1:
-    tracks_left.index += 2
-else:
-    tracks_left.index += 1
-df_info["track_IDs_left"] = tracks_left
-top1_classes = (df_top1.groupby("rec_ID")["top1_class"]
-                       .nunique()
-                       .reset_index(drop=True))
-if len(top1_classes) == 1:
-    top1_classes.index += 2
-else:
-    top1_classes.index += 1
-df_info["top1_classes"] = top1_classes
+df_info["track_IDs_left"] = (df_top1.groupby("rec_ID")
+                                    .size())
+df_info["top1_classes_left"] = (df_top1.groupby("rec_ID")["top1_class"]
+                                       .nunique())
 
 # Write DataFrame to csv file
 df_info.to_csv(f"{save_path}/{csv_name}_analysis_info.csv")
