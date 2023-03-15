@@ -34,9 +34,11 @@ in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/mod
 - **YOLOv8 detection model training** &nbsp;
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv8_detection_training.ipynb)
 
-The notebooks for detection model training also include all necessary steps to convert your model
-to [.blob format](https://docs.luxonis.com/en/latest/pages/model_conversion/) for on-device inference
-with the [Luxonis OAK](https://docs.luxonis.com/projects/hardware/en/latest/pages/BW1093.html) cameras.
+  > The notebooks for detection model training also include all necessary steps to convert your model
+    to [.blob format](https://docs.luxonis.com/en/latest/pages/model_conversion/) for on-device inference
+    with the [Luxonis OAK](https://docs.luxonis.com/projects/hardware/en/latest/pages/BW1093.html) cameras.
+
+&nbsp;
 
 You can find more information about classification model training
 in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/modeltraining/train_classification/) 📑.
@@ -44,8 +46,8 @@ in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/mod
 - **YOLOv5 classification model training** &nbsp;
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv5_classification_training.ipynb)
 
-The notebook for classification model training includes [export](https://github.com/ultralytics/yolov5/issues/251)
-to [ONNX format](https://onnx.ai/) for faster CPU inference on your local PC.
+  > The notebook for classification model training includes [export](https://github.com/ultralytics/yolov5/issues/251)
+    to [ONNX format](https://onnx.ai/) for faster CPU inference on your PC.
 
 ---
 
