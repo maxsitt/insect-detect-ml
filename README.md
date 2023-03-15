@@ -16,7 +16,7 @@ You will also find Python scripts for classification ([`predict_mod.py`](https:/
 of insect images (e.g. [cropped detections](https://maxsitt.github.io/insect-detect-docs/deployment/detection/#processing-pipeline))
 and analysis ([`csv_analysis.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/csv_analysis.py))
 of the [metadata .csv](https://maxsitt.github.io/insect-detect-docs/deployment/detection/#metadata-csv)
-files, which are generated as output from the Insect Detect DIY camera trap.
+files, which are generated as output by the DIY camera trap.
 
 ---
 
@@ -34,11 +34,9 @@ in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/mod
 - **YOLOv8 detection model training** &nbsp;
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv8_detection_training.ipynb)
 
-  > The notebooks for detection model training also include all necessary steps to convert your model
-    to [.blob format](https://docs.luxonis.com/en/latest/pages/model_conversion/) for on-device inference
-    with the [Luxonis OAK](https://docs.luxonis.com/projects/hardware/en/latest/pages/BW1093.html) cameras.
-
-&nbsp;
+  > The notebooks for detection model training include all necessary steps to convert your model to
+    [.blob format](https://docs.luxonis.com/en/latest/pages/model_conversion/) for on-device inference
+    with the [Luxonis OAK](https://docs.luxonis.com/projects/hardware/en/latest/) cameras.
 
 You can find more information about classification model training
 in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/modeltraining/train_classification/) 📑.
@@ -47,7 +45,7 @@ in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/mod
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv5_classification_training.ipynb)
 
   > The notebook for classification model training includes [export](https://github.com/ultralytics/yolov5/issues/251)
-    to [ONNX format](https://onnx.ai/) for faster CPU inference on your PC.
+    to [ONNX format](https://onnx.ai/) for faster CPU inference.
 
 ---
 
@@ -62,7 +60,7 @@ with the following added options:
 - `--new-csv` to create a new .csv file with classification results, e.g. if no metadata .csv files are available
 - `--sort-top1` to sort classified images to folders with predicted top1 class as folder name
 
-More information about deployment of the classification script on your PC can be found in the
+More information about deployment of the classification script can be found in the
 [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/classification/) 📑.
 
 ### Classification model
