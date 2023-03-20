@@ -1,4 +1,4 @@
-# Insect Detect ML - Model training and inference
+# Insect Detect ML - Model training and deployment
 
 <img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/logo.png" width="500">
 
