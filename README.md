@@ -3,7 +3,7 @@
 <img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/logo.png" width="500">
 
 [![DOI](https://zenodo.org/badge/580963598.svg)](https://zenodo.org/badge/latestdoi/580963598)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://choosealicense.com/licenses/gpl-3.0/)
 
 This repository contains Jupyter notebooks that can be used to train custom
 [YOLOv5](https://github.com/ultralytics/yolov5), [YOLOv6](https://github.com/meituan/YOLOv6),
@@ -115,7 +115,7 @@ More information about deployment of the analysis script can be found in the
 ## License
 
 All Python scripts are licensed under the GNU General Public License v3.0
-([GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0)).
+([GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)).
 
 ## Citation
 
