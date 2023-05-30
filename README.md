@@ -114,8 +114,8 @@ More information about deployment of the analysis script can be found in the
 
 ## License
 
-All Python scripts are licensed under the GNU General Public License v3.0
-([GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)).
+All Python scripts are licensed under the GNU Affero General Public License v3.0
+([GNU AGPLv3](https://choosealicense.com/licenses/agpl-3.0/)).
 
 ## Citation
 
