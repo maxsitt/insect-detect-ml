@@ -1,4 +1,4 @@
-# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+# YOLOv5 🚀 by Ultralytics, AGPL-3.0 license
 """
 Run YOLOv5 classification inference on images, videos, directories, globs, YouTube, webcam, streams, etc.
 
@@ -32,14 +32,14 @@ Website:      https://maxsitt.github.io/insect-detect-docs/
 
 Modifications:
 - add additional options (argparse arguments):
-  -> '--concat-csv' to concatenate metadata .csv files and append classification results to new columns
-  -> '--new-csv' to create new .csv file with classification results
-  -> '--sort-top1' to sort images to folders with predicted top1 class as folder name
+  -> '--concat-csv' concatenate metadata .csv files and append classification results to new columns
+  -> '--new-csv' create new .csv file with classification results
+  -> '--sort-top1' sort images to folders with predicted top1 class as folder name
                    and do not write results on to image as text
 - sort predicted images to folders with predicted top1 class as folder name
   and do not write results on to image as text (if sort_top1)
 - write classification results (top1, top2, top3 class + probability and image filename) to lists
-- concatenate all metadata .csv files in 'current directory/data/' and add new columns with
+- concatenate all metadata .csv files in the '/data' folder and add new columns with
   classification results from lists, save as 'metadata_classified_{timestamp}.csv' (if concat_csv)
 - create new .csv file with timestamp and tracking ID extracted from image filename and
   classification results from lists, save as 'data_classified_{timestamp}.csv' (if new_csv)
@@ -128,10 +128,10 @@ def run(
     # Create empty lists for top1,top2,top3 class + probability and image filename
     if concat_csv or new_csv or sort_top1:
         lst_top1 = []
-        lst_top1_prob = []
         lst_top2 = []
-        lst_top2_prob = []
         lst_top3 = []
+        lst_top1_prob = []
+        lst_top2_prob = []
         lst_top3_prob = []
     if new_csv:
         lst_img = []
@@ -164,12 +164,10 @@ def run(
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
             p = Path(p)  # to Path
-
             if sort_top1:
                 save_path = str(save_dir)
             else:
                 save_path = str(save_dir / p.name)  # im.jpg
-
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
 
             s += '%gx%g ' % im.shape[2:]  # print string
@@ -181,7 +179,6 @@ def run(
 
             # Write results
             text = '\n'.join(f'{prob[j]:.2f} {names[j]}' for j in top5i)
-
             if not sort_top1:
                 if save_img or view_img:  # Add bbox to image
                     annotator.text((32, 32), text, txt_color=(255, 255, 255))
@@ -191,12 +188,12 @@ def run(
 
             # Append results to lists
             if concat_csv or new_csv or sort_top1:
-                lst_top1.append(f"{''.join(f'{names[j]}' for j in top5i[:1])}")
-                lst_top1_prob.append(f"{''.join(f'{prob[j]:.2f}' for j in top5i[:1])}")
-                lst_top2.append(f"{''.join(f'{names[j]}' for j in top5i[1:2])}")
-                lst_top2_prob.append(f"{''.join(f'{prob[j]:.2f}' for j in top5i[1:2])}")
-                lst_top3.append(f"{''.join(f'{names[j]}' for j in top5i[2:3])}")
-                lst_top3_prob.append(f"{''.join(f'{prob[j]:.2f}' for j in top5i[2:3])}")
+                lst_top1.append(f"{names[top5i[0]]}")
+                lst_top2.append(f"{names[top5i[1]]}")
+                lst_top3.append(f"{names[top5i[2]]}")
+                lst_top1_prob.append(f"{prob[top5i[0]]:.2f}")
+                lst_top2_prob.append(f"{prob[top5i[1]]:.2f}")
+                lst_top3_prob.append(f"{prob[top5i[2]]:.2f}")
             if new_csv:
                 lst_img.append(f"{p.name}")
 
@@ -234,7 +231,7 @@ def run(
                     vid_writer[i].write(im0)
 
         # Print time (inference-only)
-        LOGGER.info(f"{s}{dt[1].dt * 1E3:.1f}ms")
+        LOGGER.info(f'{s}{dt[1].dt * 1E3:.1f}ms')
 
     # Print results
     t = tuple(x.t / seen * 1E3 for x in dt)  # speeds per image
@@ -267,8 +264,8 @@ def run(
                        "top2", "top2_prob", "top3", "top3_prob"])
 
         df_new["img_name"] = lst_img
-        df_new["timestamp"] = df_new.img_name.str[:24]
-        df_new["track_ID"] = df_new.img_name.str[25:26]
+        df_new["timestamp"] = df_new["img_name"].str[:24]
+        df_new["track_ID"] = df_new["img_name"].str[25:26]
         df_new["top1"] = lst_top1
         df_new["top1_prob"] = lst_top1_prob
         df_new["top2"] = lst_top2
@@ -309,10 +306,10 @@ def parse_opt():
 
 
 def main(opt):
-    check_requirements(exclude=('tensorboard', 'thop'))
+    check_requirements(ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
     run(**vars(opt))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     opt = parse_opt()
     main(opt)
