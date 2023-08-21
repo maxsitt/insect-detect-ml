@@ -1,4 +1,4 @@
-# Insect Detect ML - Model training and deployment
+# Insect Detect ML - Model training and data processing
 
 <img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/logo.png" width="500">
 
@@ -8,15 +8,16 @@
 This repository contains Jupyter notebooks that can be used to train custom
 [YOLOv5](https://github.com/ultralytics/yolov5), [YOLOv6](https://github.com/meituan/YOLOv6),
 [YOLOv7](https://github.com/WongKinYiu/yolov7) and [YOLOv8](https://github.com/ultralytics/ultralytics)
-object detection models or a custom YOLOv5 [image classification](https://github.com/ultralytics/yolov5#classification)
+object detection models or a custom [YOLOv5 image classification](https://github.com/ultralytics/yolov5#classification)
 model. All notebooks can be run in [Google Colab](https://colab.research.google.com/),
 where you will have access to a free cloud GPU for fast training without special hardware requirements.
 
-You will also find Python scripts for classification ([`predict_mod.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/predict_mod.py))
-of insect images (e.g. [cropped detections](https://maxsitt.github.io/insect-detect-docs/deployment/detection/#processing-pipeline))
-and analysis ([`csv_analysis.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/csv_analysis.py))
-of the [metadata .csv](https://maxsitt.github.io/insect-detect-docs/deployment/detection/#metadata-csv)
-files, which are generated as output by the DIY camera trap.
+The Python script for [classification](https://github.com/maxsitt/yolov5/blob/master/classify/predict.py)
+of the captured insect images is available in the [custom YOLOv5](https://github.com/maxsitt/yolov5) fork
+and can be used together with the provided `yolov5s-cls_128.onnx` insect classification model.
+
+Use the [`csv_analysis.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/csv_analysis.py)
+script for post-processing and analysis of the metadata .csv file with classification results.
 
 ---
 
@@ -51,14 +52,12 @@ in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/mod
 
 ## Classification
 
-The classification script [`predict_mod.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/predict_mod.py)
-is a modified version of the [`predict.py`](https://github.com/ultralytics/yolov5/blob/master/classify/predict.py)
-script from the [YOLOv5 repo](https://github.com/ultralytics/yolov5/tree/master/classify),
-with the following added options:
+The modified [YOLOv5 classification script](https://github.com/maxsitt/yolov5/blob/master/classify/predict.py)
+includes the following added options:
 
-- `--concat-csv` to concatenate the metadata .csv files and append classification results to new columns
-- `--new-csv` to create a new .csv file with classification results, e.g. if no metadata .csv files are available
-- `--sort-top1` to sort the classified images to folders with the predicted top1 class as folder name
+- `--sort-top1` sort the classified images to folders with the predicted top1 class as folder name
+- `--concat-csv` concatenate the metadata .csv files and append classification results to new columns
+- `--new-csv` create a new .csv file with classification results, e.g. if no metadata .csv files are available
 
 More information about deployment of the classification script can be found in the
 [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/classification/) 📑.
@@ -95,9 +94,9 @@ More information about the respective classes:
 
 ---
 
-## Analysis
+## Post-processing & analysis
 
-The analysis script [`csv_analysis.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/csv_analysis.py)
+The script [`csv_analysis.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/csv_analysis.py)
 can be used to automatically post-process and analyze the concatenated metadata .csv
 file after the [classification](https://maxsitt.github.io/insect-detect-docs/deployment/classification/)
 step, as it will still contain multiple rows for each tracked insect.
