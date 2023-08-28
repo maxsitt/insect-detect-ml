@@ -13,8 +13,8 @@ model. All notebooks can be run in [Google Colab](https://colab.research.google.
 where you will have access to a free cloud GPU for fast training without special hardware requirements.
 
 The Python script for [classification](https://github.com/maxsitt/yolov5/blob/master/classify/predict.py)
-of the captured insect images is available in the [custom YOLOv5](https://github.com/maxsitt/yolov5) fork
-and can be used together with the provided `yolov5s-cls_128.onnx` insect classification model.
+of the captured insect images is available in the custom [`yolov5`](https://github.com/maxsitt/yolov5)
+fork and can be used together with the provided `yolov5s-cls_128.onnx` insect classification model.
 
 Use the [`csv_analysis.py`](https://github.com/maxsitt/insect-detect-ml/blob/main/csv_analysis.py)
 script for post-processing and analysis of the metadata .csv file with classification results.
@@ -24,10 +24,10 @@ script for post-processing and analysis of the metadata .csv file with classific
 ## Model training
 
 You can find more information about detection model training
-in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/modeltraining/train_detection/) 📑.
+at the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/modeltraining/train_detection/) 📑.
 
 - **YOLOv5 detection model training** &nbsp;
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv5_detection_training_OAK_conversion.ipynb)
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv5_detection_training.ipynb)
 - **YOLOv6 detection model training** &nbsp;
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv6_detection_training.ipynb)
 - **YOLOv7 detection model training** &nbsp;
@@ -35,18 +35,20 @@ in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/mod
 - **YOLOv8 detection model training** &nbsp;
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv8_detection_training.ipynb)
 
-  > The notebooks for detection model training include all necessary steps to convert your model to
-    [.blob format](https://docs.luxonis.com/en/latest/pages/model_conversion/) for on-device inference
-    with the [Luxonis OAK](https://docs.luxonis.com/projects/hardware/en/latest/) cameras.
+  > The PyTorch model weights can be converted to [.blob](https://docs.luxonis.com/en/latest/pages/model_conversion/)
+    format at [tools.luxonis.com](https://tools.luxonis.com/) for on-device inference
+    with the [Luxonis OAK](https://docs.luxonis.com/projects/hardware/en/latest/) devices.
+
+&nbsp;
 
 You can find more information about classification model training
-in the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/modeltraining/train_classification/) 📑.
+at the [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/modeltraining/train_classification/) 📑.
 
 - **YOLOv5 classification model training** &nbsp;
   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv5_classification_training.ipynb)
 
   > The notebook for classification model training includes [export](https://github.com/ultralytics/yolov5/issues/251)
-    to [ONNX format](https://onnx.ai/) for faster CPU inference.
+    to [ONNX](https://onnx.ai/) format for faster CPU inference.
 
 ---
 
@@ -56,10 +58,11 @@ The modified [YOLOv5 classification script](https://github.com/maxsitt/yolov5/bl
 includes the following added options:
 
 - `--sort-top1` sort the classified images to folders with the predicted top1 class as folder name
-- `--concat-csv` concatenate the metadata .csv files and append classification results to new columns
+- `--sort-prob` sort images first by probability and then by top1 class (requires --sort-top1)
+- `--concat-csv` concatenate all metadata .csv files and append classification results to new columns
 - `--new-csv` create a new .csv file with classification results, e.g. if no metadata .csv files are available
 
-More information about deployment of the classification script can be found in the
+More information about deployment of the classification script can be found at the
 [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/classification/) 📑.
 
 ### Classification model
@@ -106,7 +109,7 @@ probability. Additionally, several
 [plots](https://maxsitt.github.io/insect-detect-docs/deployment/analysis/#overview-plots)
 are generated that can give a first overview of the analyzed data.
 
-More information about deployment of the analysis script can be found in the
+More information about deployment of the analysis script can be found at the
 [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/analysis/) 📑.
 
 ---
