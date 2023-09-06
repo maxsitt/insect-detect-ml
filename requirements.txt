@@ -1,0 +1,11 @@
+# Required Python packages for processing and analysis of images
+# and metadata captured with the Insect Detect DIY camera trap
+# Website: https://maxsitt.github.io/insect-detect-docs/
+
+# Install packages with:
+# python.exe -m pip install -r requirements.txt
+
+pandas
+matplotlib
+distinctipy
+Pillow
