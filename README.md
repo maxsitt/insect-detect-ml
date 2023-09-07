@@ -117,6 +117,8 @@ More information about deployment of the classification script can be found at t
 | scorpionfly  | 24     | 1.0                       | 1.0                   | 1.0                | 1.0                  |
 | wasp         | 103    | 0.99                      | 1.0                   | 0.99               | 0.995                |
 
+<img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/images/efficientnet-b0_confusion_matrix_val.png" width="800">
+
 </details>
 
 <details>
