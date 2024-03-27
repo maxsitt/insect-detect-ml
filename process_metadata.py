@@ -15,9 +15,12 @@ Functions:
     create_plots(): Create overview plots with the post-processed metadata and save to .png.
 
     main(): Read and post-process metadata, save results together with info log and create plots.
-            Optional arguments:
+
+            Required argument:
             '-source'   set path to directory containing metadata .csv with classification results
                         -> will get the last metadata .csv file in alphabetical order
+
+            Optional arguments:
             '-size'     set absolute frame width and height in mm to calculate 'true' bbox size [mm]
                         -> e.g. '-size 350 200' for small platform (350x200 mm)
                         -> default of (1, 1) gives relative bbox size

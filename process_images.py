@@ -11,8 +11,11 @@ Functions:
     calc_rgb_stats(): Calculate RGB mean values and standard deviations and save result to .csv.
 
     main(): Get .jpg files in directory and check for corrupt images, write image infos to .csv.
-            Optional arguments:
+
+            Required argument:
             '-source' set path to directory containing .jpg images
+
+            Optional argument:
             '-rgb'    calculate RGB mean values and standard deviations of all images
 
 calc_rgb_stats() is based on the second solution from https://stackoverflow.com/a/73359050
