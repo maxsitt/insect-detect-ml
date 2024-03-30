@@ -66,16 +66,18 @@ in the custom [`yolov5`](https://github.com/maxsitt/yolov5) fork includes the fo
 More information about deployment of the classification script can be found at the
 [**Insect Detect Docs**](https://maxsitt.github.io/insect-detect-docs/deployment/classification/) 📑.
 
+&nbsp;
+
 ### Classification model
 
-| Model           | size<br><sup>(pixels) | Top1 Accuracy<sup>val<br> | Precision<sup>val<br> | Recall<sup>val<br> | F1 score<sup>val<br> |
-| --------------- | --------------------- | ------------------------- | --------------------- | ------------------ | -------------------- |
-| EfficientNet-B0 | 128                   | 0.98                      | 0.979                 | 0.974              | 0.976                |
+| Model<br><sup>(.onnx) | size<br><sup>(pixels) | Top1 Accuracy<sup>test<br> | Precision<sup>test<br> | Recall<sup>test<br> | F1 score<sup>test<br> |
+| --------------------- | --------------------- | -------------------------- | ---------------------- | ------------------- | --------------------- |
+| EfficientNet-B0       | 128                   | 0.972                      | 0.971                  | 0.967               | 0.969                 |
 
 **Table Notes**
 
-- The model was trained with image size 128 to 20 epochs with batch size 64 and default
-  settings and hyperparameters. Reproduce the model training with the provided
+- The [model](https://github.com/maxsitt/insect-detect-ml/tree/main/models) was trained to 20 epochs with image
+  size 128, batch size 64 and default settings and hyperparameters. Reproduce the model training with the provided
   [Google Colab notebook](https://colab.research.google.com/github/maxsitt/insect-detect-ml/blob/main/notebooks/YOLOv5_classification_training.ipynb).
 - Trained on [Insect Detect - insect classification dataset v2](https://doi.org/10.5281/zenodo.8325383)
   with 27 classes. To reproduce the dataset split, keep the default settings in the Colab notebook
@@ -83,44 +85,6 @@ More information about deployment of the classification script can be found at t
 - Dataset can be explored at [Roboflow Universe](https://universe.roboflow.com/maximilian-sittinger/insect_detect_classification_v2).
   Export from Roboflow compresses the images and can lead to a decreased model accuracy.
   It is recommended to use the uncompressed dataset from [Zenodo](https://doi.org/10.5281/zenodo.8325383).
-
-<details>
-  <summary>Full model metrics on dataset validation split (click to expand)</summary>
-
-| Class        | Images | Top1 Accuracy<sup>val<br> | Precision<sup>val<br> | Recall<sup>val<br> | F1 score<sup>val<br> |
-| ------------ | ------ | ------------------------- | --------------------- | ------------------ | -------------------- |
-| all          | 4189   | 0.98                      | 0.979                 | 0.974              | 0.976                |
-| ant          | 219    | 0.995                     | 0.995                 | 0.995              | 0.995                |
-| bee          | 212    | 0.967                     | 0.958                 | 0.967              | 0.962                |
-| bee_apis     | 58     | 1.0                       | 0.967                 | 1.0                | 0.983                |
-| bee_bombus   | 252    | 1.0                       | 0.996                 | 1.0                | 0.998                |
-| beetle       | 104    | 0.933                     | 0.942                 | 0.933              | 0.937                |
-| beetle_cocci | 155    | 1.0                       | 1.0                   | 1.0                | 1.0                  |
-| beetle_oedem | 39     | 0.897                     | 0.972                 | 0.897              | 0.933                |
-| bug          | 78     | 0.949                     | 0.961                 | 0.949              | 0.955                |
-| bug_grapho   | 37     | 1.0                       | 1.0                   | 1.0                | 1.0                  |
-| fly          | 343    | 0.983                     | 0.939                 | 0.983              | 0.96                 |
-| fly_empi     | 35     | 1.0                       | 0.972                 | 1.0                | 0.986                |
-| fly_sarco    | 63     | 0.841                     | 0.964                 | 0.841              | 0.898                |
-| fly_small    | 332    | 0.97                      | 0.982                 | 0.97               | 0.976                |
-| hfly_episyr  | 503    | 0.996                     | 0.996                 | 0.996              | 0.996                |
-| hfly_eristal | 390    | 1.0                       | 1.0                   | 1.0                | 1.0                  |
-| hfly_eupeo   | 271    | 0.989                     | 0.993                 | 0.989              | 0.991                |
-| hfly_myathr  | 118    | 0.992                     | 1.0                   | 0.992              | 0.996                |
-| hfly_sphaero | 74     | 1.0                       | 0.987                 | 1.0                | 0.993                |
-| hfly_syrphus | 97     | 1.0                       | 0.99                  | 1.0                | 0.995                |
-| lepi         | 45     | 0.978                     | 0.978                 | 0.978              | 0.978                |
-| none_bg      | 170    | 0.988                     | 0.982                 | 0.988              | 0.985                |
-| none_bird    | 13     | 1.0                       | 1.0                   | 1.0                | 1.0                  |
-| none_dirt    | 167    | 0.982                     | 0.976                 | 0.982              | 0.979                |
-| none_shadow  | 129    | 0.969                     | 0.984                 | 0.969              | 0.977                |
-| other        | 158    | 0.88                      | 0.903                 | 0.88               | 0.891                |
-| scorpionfly  | 24     | 1.0                       | 1.0                   | 1.0                | 1.0                  |
-| wasp         | 103    | 0.99                      | 1.0                   | 0.99               | 0.995                |
-
-<img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/images/efficientnet-b0_confusion_matrix_val.png" width="800">
-
-</details>
 
 <details>
   <summary>Full model metrics on dataset test split (click to expand)</summary>
@@ -156,7 +120,47 @@ More information about deployment of the classification script can be found at t
 | scorpionfly  | 12     | 1.0                        | 1.0                    | 1.0                 | 1.0                   |
 | wasp         | 52     | 1.0                        | 1.0                    | 1.0                 | 1.0                   |
 
+<img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/images/efficientnet-b0_confusion_matrix_test.png" width="800">
+
 </details>
+
+<details>
+  <summary>Full model metrics on dataset validation split (click to expand)</summary>
+
+| Class        | Images | Top1 Accuracy<sup>val<br> | Precision<sup>val<br> | Recall<sup>val<br> | F1 score<sup>val<br> |
+| ------------ | ------ | ------------------------- | --------------------- | ------------------ | -------------------- |
+| all          | 4189   | 0.98                      | 0.979                 | 0.974              | 0.976                |
+| ant          | 219    | 0.995                     | 0.995                 | 0.995              | 0.995                |
+| bee          | 212    | 0.967                     | 0.958                 | 0.967              | 0.962                |
+| bee_apis     | 58     | 1.0                       | 0.967                 | 1.0                | 0.983                |
+| bee_bombus   | 252    | 1.0                       | 0.996                 | 1.0                | 0.998                |
+| beetle       | 104    | 0.933                     | 0.942                 | 0.933              | 0.937                |
+| beetle_cocci | 155    | 1.0                       | 1.0                   | 1.0                | 1.0                  |
+| beetle_oedem | 39     | 0.897                     | 0.972                 | 0.897              | 0.933                |
+| bug          | 78     | 0.949                     | 0.961                 | 0.949              | 0.955                |
+| bug_grapho   | 37     | 1.0                       | 1.0                   | 1.0                | 1.0                  |
+| fly          | 343    | 0.983                     | 0.939                 | 0.983              | 0.96                 |
+| fly_empi     | 35     | 1.0                       | 0.972                 | 1.0                | 0.986                |
+| fly_sarco    | 63     | 0.841                     | 0.964                 | 0.841              | 0.898                |
+| fly_small    | 332    | 0.97                      | 0.982                 | 0.97               | 0.976                |
+| hfly_episyr  | 503    | 0.996                     | 0.996                 | 0.996              | 0.996                |
+| hfly_eristal | 390    | 1.0                       | 1.0                   | 1.0                | 1.0                  |
+| hfly_eupeo   | 271    | 0.989                     | 0.993                 | 0.989              | 0.991                |
+| hfly_myathr  | 118    | 0.992                     | 1.0                   | 0.992              | 0.996                |
+| hfly_sphaero | 74     | 1.0                       | 0.987                 | 1.0                | 0.993                |
+| hfly_syrphus | 97     | 1.0                       | 0.99                  | 1.0                | 0.995                |
+| lepi         | 45     | 0.978                     | 0.978                 | 0.978              | 0.978                |
+| none_bg      | 170    | 0.988                     | 0.982                 | 0.988              | 0.985                |
+| none_bird    | 13     | 1.0                       | 1.0                   | 1.0                | 1.0                  |
+| none_dirt    | 167    | 0.982                     | 0.976                 | 0.982              | 0.979                |
+| none_shadow  | 129    | 0.969                     | 0.984                 | 0.969              | 0.977                |
+| other        | 158    | 0.88                      | 0.903                 | 0.88               | 0.891                |
+| scorpionfly  | 24     | 1.0                       | 1.0                   | 1.0                | 1.0                  |
+| wasp         | 103    | 0.99                      | 1.0                   | 0.99               | 0.995                |
+
+</details>
+
+<img src="https://raw.githubusercontent.com/maxsitt/insect-detect-docs/main/docs/assets/images/classification_classes.png" width="800">
 
 ---
 
