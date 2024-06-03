@@ -59,7 +59,7 @@ def read_sort_metadata(csv_file, csv_name, save_path, frame_width=1, frame_heigh
     df["bbox_length"] = np.maximum(df["bbox_size_x"], df["bbox_size_y"])
     df["bbox_width"] = np.minimum(df["bbox_size_x"], df["bbox_size_y"])
 
-    df.sort_values(["rec_ID", "track_ID", "timestamp"], inplace=True)
+    df.sort_values(["cam_ID", "rec_ID", "track_ID", "timestamp"], inplace=True)
     df.to_csv(save_path / f"{csv_name}_sorted.csv", index=False)
 
     return df
@@ -72,10 +72,10 @@ def process_track_id(df, csv_name, save_path):
     mean + weighted classification probability and mean bounding box length + width
     for each top1 class per tracking ID per recording ID.
     """
-    df_grouped_top1 = df.groupby(["rec_ID", "track_ID", "top1"])
+    df_grouped_top1 = df.groupby(["cam_ID", "rec_ID", "track_ID", "top1"])
     df_top1_all = df_grouped_top1.size().reset_index(name="top1_imgs")
 
-    df_top1_all["track_ID_imgs"] = df_top1_all.groupby(["rec_ID", "track_ID"])["top1_imgs"].transform("sum")
+    df_top1_all["track_ID_imgs"] = df_top1_all.groupby(["cam_ID", "rec_ID", "track_ID"])["top1_imgs"].transform("sum")
 
     df_top1_all["top1_prob_mean"] = df_grouped_top1["top1_prob"].mean().round(2).reset_index(drop=True)
     df_top1_all["top1_prob_weighted"] = (df_top1_all["top1_prob_mean"] * (df_top1_all["top1_imgs"] / df_top1_all["track_ID_imgs"])).round(2)
@@ -83,9 +83,9 @@ def process_track_id(df, csv_name, save_path):
     df_top1_all["bbox_length_mean"] = df_grouped_top1["bbox_length"].mean().round(3).reset_index(drop=True)
     df_top1_all["bbox_width_mean"] = df_grouped_top1["bbox_width"].mean().round(3).reset_index(drop=True)
 
-    df_top1_all.sort_values(["rec_ID", "track_ID", "top1_prob_weighted"], ascending=[True, True, False], inplace=True)
-    df_top1_all = df_top1_all[["rec_ID", "track_ID", "track_ID_imgs", "top1_imgs", "top1", "top1_prob_mean",
-                               "top1_prob_weighted", "bbox_length_mean", "bbox_width_mean"]]
+    df_top1_all.sort_values(["cam_ID", "rec_ID", "track_ID", "top1_prob_weighted"], ascending=[True, True, True, False], inplace=True)
+    df_top1_all = df_top1_all[["cam_ID", "rec_ID", "track_ID", "track_ID_imgs", "top1_imgs", "top1",
+                               "top1_prob_mean", "top1_prob_weighted", "bbox_length_mean", "bbox_width_mean"]]
     df_top1_all.to_csv(save_path / f"{csv_name}_top1_all.csv", index=False)
 
     return df_top1_all
@@ -99,7 +99,7 @@ def process_top1_class(df, df_top1_all, csv_name, save_path, images=None, durati
     box length + width for the top1 class with the highest weighted probability per tracking ID.
     Optionally remove tracking IDs with less or more than the specified number of images or duration.
     """
-    df_grouped_trackid = df.groupby(["rec_ID", "track_ID"])
+    df_grouped_trackid = df.groupby(["cam_ID", "rec_ID", "track_ID"])
     df_top1_final = df_grouped_trackid.size().reset_index(name="track_ID_imgs")
 
     timestamps = df_grouped_trackid["timestamp"].agg(["min", "max"])
@@ -109,7 +109,7 @@ def process_top1_class(df, df_top1_all, csv_name, save_path, images=None, durati
     df_top1_final["duration_s"] = ((df_top1_final["end_time"] - df_top1_final["start_time"]) / pd.Timedelta(seconds=1)).round(2)
     df_top1_final["det_conf_mean"] = df_grouped_trackid["confidence"].mean().round(2).reset_index(drop=True)
 
-    prob_idxmax = df_top1_all.groupby(["rec_ID", "track_ID"])["top1_prob_weighted"].idxmax()
+    prob_idxmax = df_top1_all.groupby(["cam_ID", "rec_ID", "track_ID"])["top1_prob_weighted"].idxmax()
     df_top1_final = df_top1_final.join(df_top1_all.loc[prob_idxmax, ["top1_imgs", "top1", "top1_prob_mean",
                                                                      "top1_prob_weighted", "bbox_length_mean",
                                                                      "bbox_width_mean"]].reset_index(drop=True))
@@ -134,7 +134,7 @@ def process_top1_class(df, df_top1_all, csv_name, save_path, images=None, durati
                      "Usage:    process_metadata.py -source PATH -images 3 1800\n"
                      "      OR: process_metadata.py -source PATH -duration 2 1800\n")
 
-    df_top1_final = df_top1_final[["rec_ID", "date", "track_ID", "start_time", "end_time", "duration_s",
+    df_top1_final = df_top1_final[["cam_ID", "rec_ID", "date", "track_ID", "start_time", "end_time", "duration_s",
                                    "det_conf_mean", "track_ID_imgs", "top1_imgs", "top1", "top1_prob_mean",
                                    "top1_prob_weighted", "bbox_length_mean", "bbox_width_mean"]]
     df_top1_final.to_csv(save_path / f"{csv_name}_top1_final.csv", index=False)
