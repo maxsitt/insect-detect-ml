@@ -50,9 +50,12 @@ import pandas as pd
 
 def read_sort_metadata(csv_file, csv_name, save_path, frame_width=1, frame_height=1):
     """Read metadata .csv file and save sorted metadata to .csv."""
-    df = pd.read_csv(csv_file, encoding="utf-8", parse_dates=["timestamp"])
-    if df["timestamp"].dtypes != "datetime64[ns]":
-        df["timestamp"] = pd.to_datetime(df["timestamp"], format="%Y%m%d_%H-%M-%S.%f")  # old format
+    df = pd.read_csv(csv_file, encoding="utf-8")
+
+    # Convert timestamp to datetime format and handle cases with 0 milliseconds or in old format
+    df["timestamp"] = pd.to_datetime(df["timestamp"], format="%Y-%m-%dT%H:%M:%S.%f", errors="coerce")
+    df["timestamp"] = df["timestamp"].fillna(pd.to_datetime(df["timestamp"], format="%Y-%m-%dT%H:%M:%S", errors="coerce"))
+    df["timestamp"] = df["timestamp"].fillna(pd.to_datetime(df["timestamp"], format="%Y%m%d_%H-%M-%S.%f"))
 
     df["bbox_size_x"] = round((df["x_max"] - df["x_min"]) * frame_width, 4)
     df["bbox_size_y"] = round((df["y_max"] - df["y_min"]) * frame_height, 4)
